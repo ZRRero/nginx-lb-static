@@ -7,7 +7,12 @@ variable "load_balancer_instance_type" {
 }
 
 #Network
-variable "vpc_id" {}
-variable "subnets_ids" {
+variable "vpc_cidr_block" {}
+
+variable "availability_zones" {
+  type = list(string)
+}
+
+variable "public_cidr_blocks" {
   type = list(string)
 }

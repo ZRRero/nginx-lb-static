@@ -20,7 +20,7 @@ data "aws_ami" "base_ami" {
 resource "aws_security_group" "load_balancer_security_group" {
   provider = aws.master_region
   name = "load_balancer_security_group"
-  vpc_id = var.vpc_id
+  vpc_id = aws_vpc.main.id
   ingress {
     description      = "Public ingress on port 80"
     from_port        = 80
@@ -40,7 +40,7 @@ resource "aws_security_group" "load_balancer_security_group" {
 resource "aws_security_group" "static_security_group" {
   provider = aws.master_region
   name = "static_security_group"
-  vpc_id = var.vpc_id
+  vpc_id = aws_vpc.main.id
   ingress {
     description = "Access from load_balancer_security_group on port 80"
     from_port = 80
