@@ -6,6 +6,10 @@ variable "load_balancer_instance_type" {
   default = "t4g.nano"
 }
 
+variable "static_instance_count" {
+  type = number
+}
+
 #Network
 variable "vpc_cidr_block" {}
 
