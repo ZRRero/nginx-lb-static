@@ -62,5 +62,19 @@ resource "aws_launch_template" "static_launch_template" {
   name = "static_launch_template"
   image_id = data.aws_ami.base_ami.image_id
   instance_type = var.static_instance_type
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.static_instance_profile.arn
+  }
+  user_data = filebase64("webconfig/user-data-static.sh")
+}
 
+resource "aws_launch_template" "load_balancer_launch_template" {
+  provider = aws.master_region
+  name = "load_balancer_launch_template"
+  image_id = data.aws_ami.base_ami.image_id
+  instance_type = var.load_balancer_instance_type
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.static_instance_profile.arn
+  }
+  user_data = filebase64("webconfig/user-data-lb.sh")
 }

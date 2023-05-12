@@ -2,6 +2,10 @@ variable "static_instance_type" {
   default = "t4g.nano"
 }
 
+variable "load_balancer_instance_type" {
+  default = "t4g.nano"
+}
+
 #Network
 variable "vpc_id" {}
 variable "subnets_ids" {
