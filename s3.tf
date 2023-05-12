@@ -1,4 +1,6 @@
-resource "aws_s3_bucket" "configuration_bucket" {}
+resource "aws_s3_bucket" "configuration_bucket" {
+  provider = aws.master_region
+}
 
 resource "aws_s3_object" "index" {
   bucket = aws_s3_bucket.configuration_bucket.bucket
