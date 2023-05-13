@@ -3,7 +3,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Author = "<Your name or email>"
+      Author = "David Useche"
       Type = "nginx-lb-static"
     }
   }
