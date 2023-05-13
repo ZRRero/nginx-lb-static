@@ -26,7 +26,7 @@ resource "aws_security_group" "load_balancer_security_group" {
     from_port        = 80
     to_port          = 80
     protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0"]
+    cidr_blocks      = ["0.0.0.0/0"]
   }
   egress {
     description = "Public egress"
@@ -77,20 +77,4 @@ resource "aws_launch_template" "load_balancer_launch_template" {
     arn = aws_iam_instance_profile.static_instance_profile.arn
   }
   user_data = filebase64("webconfig/user-data-lb.sh")
-}
-
-resource "aws_instance" "load_balancer_instance" {
-  provider = aws.master_region
-  tags = {
-    "Name": "load_balancer"
-  }
-}
-
-resource "aws_instance" "static_instance" {
-  provider = aws.master_region
-  count = var.static_instance_count
-  tags = {
-    "Number": count.index
-    "load-balancer": "load_balancer"
-  }
 }
