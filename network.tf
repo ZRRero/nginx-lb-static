@@ -2,7 +2,7 @@ resource "aws_vpc" "main" {
   provider = aws.master_region
   cidr_block = var.vpc_cidr_block
   tags = {
-    Name = "Main VPC"
+    Name = "Technical screening"
   }
 }
 

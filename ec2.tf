@@ -66,6 +66,12 @@ resource "aws_launch_template" "static_launch_template" {
     arn = aws_iam_instance_profile.static_instance_profile.arn
   }
   user_data = filebase64("webconfig/user-data-static.sh")
+  vpc_security_group_ids = [aws_security_group.static_security_group.id]
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens = "required"
+    instance_metadata_tags = "enabled"
+  }
 }
 
 resource "aws_launch_template" "load_balancer_launch_template" {
@@ -77,4 +83,10 @@ resource "aws_launch_template" "load_balancer_launch_template" {
     arn = aws_iam_instance_profile.static_instance_profile.arn
   }
   user_data = filebase64("webconfig/user-data-lb.sh")
+  vpc_security_group_ids = [aws_security_group.load_balancer_security_group.id]
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens = "required"
+    instance_metadata_tags = "enabled"
+  }
 }

@@ -52,7 +52,7 @@ resource "aws_iam_role" "static_role" {
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
   inline_policy {
     name = "policy"
-    policy = data.aws_iam_policy_document.load_balancer_policy.json
+    policy = data.aws_iam_policy_document.static_policy.json
   }
 }
 
@@ -64,6 +64,6 @@ resource "aws_iam_instance_profile" "load_balancer_instance_profile" {
 
 resource "aws_iam_instance_profile" "static_instance_profile" {
   provider = aws.master_region
-  name = "load_balancer_instance_profile"
-  role = aws_iam_role.load_balancer_role.name
+  name = "static_instance_profile"
+  role = aws_iam_role.static_role.name
 }

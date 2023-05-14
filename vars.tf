@@ -1,9 +1,9 @@
 variable "static_instance_type" {
-  default = "t4g.nano"
+  default = "t3a.nano"
 }
 
 variable "load_balancer_instance_type" {
-  default = "t4g.nano"
+  default = "t3a.nano"
 }
 
 variable "static_instance_count" {
