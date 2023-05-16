@@ -13,7 +13,8 @@ BUCKET=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/la
 aws s3 cp s3://$BUCKET/load_balancer load_balancer
 sudo rm /var/www/html/*
 sudo rm /etc/nginx/sites-enabled/default
-IPS=$(aws ec2 describe-instances --filters Name=tag:Owner,Values=$NAME --query "Reservations[0].Instances[].PublicIpAddress" --output text)
+IPS=$(aws ec2 describe-instances --filters Name=tag:Owner,Values=$NAME --query "Reservations[].Instances[].PublicIpAddress" --output text)
+echo $IPS
 SERVERS=''
 SERVERS_BASE='server {SERVER};\n'
 for IP in ${IPS[@]}
