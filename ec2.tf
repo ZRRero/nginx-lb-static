@@ -126,4 +126,5 @@ resource "aws_instance" "load_balancer_instance" {
     "Name": "load_balancer"
   }
   subnet_id = aws_subnet.public_subnets[0].id
+  depends_on = [aws_instance.static_instance]
 }
