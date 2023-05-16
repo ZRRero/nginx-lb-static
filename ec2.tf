@@ -110,6 +110,20 @@ resource "aws_instance" "static_instance" {
     "Number": count.index
     "Owner": "load_balancer"
     "Bucket": aws_s3_bucket.configuration_bucket.bucket
+    "Name": "Static-${count.index}"
   }
   subnet_id = aws_subnet.public_subnets[count.index % length(aws_subnet.public_subnets)].id
+}
+
+resource "aws_instance" "load_balancer_instance" {
+  provider = aws.master_region
+  launch_template {
+    id = aws_launch_template.load_balancer_launch_template.id
+    version = "$Latest"
+  }
+  tags = {
+    "Bucket": aws_s3_bucket.configuration_bucket.bucket
+    "Name": "load_balancer"
+  }
+  subnet_id = aws_subnet.public_subnets[0].id
 }

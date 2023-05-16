@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+set -x -e
+# redirect the output of this script to a file and console
+exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
 sudo apt-get update
 sudo apt-get install -y nginx unzip
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
