@@ -1,17 +1,15 @@
-http {
-    upstream backend {
-        {SERVERS}
+upstream backend {
+    {SERVERS}
+}
+
+server {
+    listen 80;
+
+    location /health {
+        return 200 "load-balancer";
     }
 
-    server {
-        listen 80;
-
-        location /health {
-                    return 200 "load-balancer"
-        }
-
-        location / {
-            proxy_pass http://backend;
-        }
+    location / {
+        proxy_pass http://backend;
     }
 }
