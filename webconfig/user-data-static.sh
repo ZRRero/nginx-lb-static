@@ -19,3 +19,5 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo cp static /etc/nginx/sites-enabled/static
 sudo cp index.html /var/www/html/index.html
 sudo systemctl restart nginx
+#Cleanup
+sudo rm static index.html

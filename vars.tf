@@ -6,8 +6,8 @@ variable "load_balancer_instance_type" {
   default = "t3a.nano"
 }
 
-variable "static_instance_count" {
-  type = number
+variable "static_instances_weights" {
+  type = list(number)
 }
 
 #Network

@@ -17,9 +17,9 @@ data "aws_ami" "base_ami" {
   }
 }
 
-resource "aws_security_group" "load_balancer_security_group" {
+resource "aws_security_group" "instance_security_group" {
   provider = aws.master_region
-  name = "load_balancer_security_group"
+  name = "instance_security_group"
   vpc_id = aws_vpc.main.id
   ingress {
     description      = "Public ingress on port 80"
@@ -27,26 +27,6 @@ resource "aws_security_group" "load_balancer_security_group" {
     to_port          = 80
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
-  }
-  egress {
-    description = "Public egress"
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-resource "aws_security_group" "static_security_group" {
-  provider = aws.master_region
-  name = "static_security_group"
-  vpc_id = aws_vpc.main.id
-  ingress {
-    description = "Access from load_balancer_security_group on port 80"
-    from_port = 80
-    protocol  = "tcp"
-    to_port   = 80
-    security_groups = [aws_security_group.load_balancer_security_group.id]
   }
   egress {
     description = "Public egress"
@@ -66,7 +46,7 @@ resource "aws_launch_template" "static_launch_template" {
     arn = aws_iam_instance_profile.static_instance_profile.arn
   }
   network_interfaces {
-    security_groups = [aws_security_group.static_security_group.id]
+    security_groups = [aws_security_group.instance_security_group.id]
     associate_public_ip_address = true
     delete_on_termination =true
   }
@@ -87,7 +67,7 @@ resource "aws_launch_template" "load_balancer_launch_template" {
     arn = aws_iam_instance_profile.load_balancer_instance_profile.arn
   }
   network_interfaces {
-    security_groups = [aws_security_group.load_balancer_security_group.id]
+    security_groups = [aws_security_group.instance_security_group.id]
     associate_public_ip_address = true
     delete_on_termination =true
   }
@@ -101,7 +81,7 @@ resource "aws_launch_template" "load_balancer_launch_template" {
 
 resource "aws_instance" "static_instance" {
   provider = aws.master_region
-  count = var.static_instance_count
+  count = length(var.static_instances_weights)
   launch_template {
     id = aws_launch_template.static_launch_template.id
     version = "$Latest"
@@ -111,6 +91,7 @@ resource "aws_instance" "static_instance" {
     "Owner": "load_balancer"
     "Bucket": aws_s3_bucket.configuration_bucket.bucket
     "Name": "Static-${count.index}"
+    "Weight": var.static_instances_weights[count.index]
   }
   subnet_id = aws_subnet.public_subnets[count.index % length(aws_subnet.public_subnets)].id
 }
