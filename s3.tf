@@ -19,3 +19,9 @@ resource "aws_s3_object" "static_config" {
   key    = "static"
   source = "webconfig/static"
 }
+
+resource "aws_s3_object" "load_balancer_update" {
+  bucket = aws_s3_bucket.configuration_bucket.bucket
+  key    = "lb-update.sh"
+  source = "webconfig/lb-update.sh"
+}

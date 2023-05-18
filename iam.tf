@@ -3,7 +3,8 @@ data "aws_iam_policy_document" "load_balancer_policy" {
     sid = "AllowS3Download"
     effect = "Allow"
     actions = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.configuration_bucket.arn}/${aws_s3_object.load_balancer_config.key}"]
+    resources = ["${aws_s3_bucket.configuration_bucket.arn}/${aws_s3_object.load_balancer_config.key}",
+                "${aws_s3_bucket.configuration_bucket.arn}/${aws_s3_object.load_balancer_update.key}"]
   }
   statement {
     sid = "AllowDescribeInstances"
@@ -40,6 +41,7 @@ resource "aws_iam_role" "load_balancer_role" {
   provider = aws.master_region
   name = "load_balancer_role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
   inline_policy {
     name = "policy"
     policy = data.aws_iam_policy_document.load_balancer_policy.json
@@ -50,6 +52,7 @@ resource "aws_iam_role" "static_role" {
   provider = aws.master_region
   name = "static_role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
   inline_policy {
     name = "policy"
     policy = data.aws_iam_policy_document.static_policy.json
